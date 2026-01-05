@@ -22,6 +22,8 @@
             --darker: #050811;
             --light: #d1f7ff;
             --glow: 0 0 15px;
+            --success: #00ff99;
+            --error: #ff4d4d;
         }
         
         body {
@@ -35,6 +37,10 @@
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(255, 42, 109, 0.05) 0%, transparent 20%),
                 radial-gradient(circle at 90% 80%, rgba(5, 217, 232, 0.05) 0%, transparent 20%);
+        }
+        
+        html {
+            scroll-behavior: smooth;
         }
         
         a {
@@ -57,15 +63,19 @@
             position: fixed;
             transform: translate(-50%, -50%);
             pointer-events: none;
-            transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease;
+            transition: 
+                transform 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+                width 0.2s ease,
+                height 0.2s ease,
+                background-color 0.2s ease;
             z-index: 9999;
             mix-blend-mode: difference;
         }
         
         .custom-cursor.hover {
             transform: translate(-50%, -50%) scale(1.5);
-            background-color: rgba(5, 217, 232, 0.2);
-            box-shadow: 0 0 10px var(--secondary);
+            background-color: rgba(5, 217, 232, 0.3);
+            box-shadow: 0 0 15px var(--secondary);
         }
         
         /* ================= Header ================= */
@@ -74,9 +84,10 @@
             text-align: center;
             position: relative;
             z-index: 10;
-            background: linear-gradient(180deg, rgba(10, 14, 23, 0.95) 0%, rgba(5, 8, 17, 0.8) 100%);
+            background: linear-gradient(180deg, rgba(10, 14, 23, 0.95) 0%, rgba(5, 8, 17, 0.9) 100%);
             border-bottom: 1px solid rgba(5, 217, 232, 0.2);
-            box-shadow: 0 0 30px rgba(5, 217, 232, 0.1);
+            box-shadow: 0 0 40px rgba(5, 217, 232, 0.15);
+            backdrop-filter: blur(10px);
         }
         
         .logo-container {
@@ -93,11 +104,26 @@
             border: 3px solid var(--primary);
             box-shadow: var(--glow) var(--primary), 0 0 30px rgba(255, 42, 109, 0.3);
             animation: pulse 3s infinite alternate;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: rotate(5deg) scale(1.05);
         }
         
         @keyframes pulse {
-            0% { box-shadow: var(--glow) var(--primary), 0 0 30px rgba(255, 42, 109, 0.3); }
-            100% { box-shadow: var(--glow) var(--secondary), 0 0 40px rgba(5, 217, 232, 0.4); }
+            0% { 
+                box-shadow: 
+                    0 0 15px var(--primary),
+                    0 0 30px rgba(255, 42, 109, 0.3),
+                    inset 0 0 10px rgba(255, 42, 109, 0.1); 
+            }
+            100% { 
+                box-shadow: 
+                    0 0 20px var(--secondary),
+                    0 0 40px rgba(5, 217, 232, 0.4),
+                    inset 0 0 15px rgba(5, 217, 232, 0.2); 
+            }
         }
         
         header h1 {
@@ -111,6 +137,7 @@
             color: transparent;
             letter-spacing: 2px;
             text-transform: uppercase;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         
         header p {
@@ -150,7 +177,7 @@
             bottom: 0;
             left: 0;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 0.3s ease;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         nav a:hover {
@@ -178,10 +205,11 @@
             font-weight: 500;
             font-size: 1rem;
             letter-spacing: 1px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             z-index: 1;
+            transform: translateY(0);
         }
         
         .btn-social::before {
@@ -193,7 +221,7 @@
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             z-index: -1;
-            transition: transform 0.5s ease;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             transform: scaleX(0);
             transform-origin: right;
         }
@@ -223,17 +251,27 @@
         
         .btn-social:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(5, 217, 232, 0.3);
         }
         
         /* ================= Sections ================= */
         section {
             padding: 5rem 0;
             position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         section:nth-child(even) {
-            background-color: rgba(10, 14, 23, 0.7);
+            background-color: rgba(10, 14, 23, 0.5);
         }
         
         .section-title {
@@ -243,6 +281,16 @@
             margin-bottom: 3.5rem;
             position: relative;
             color: var(--light);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInDown 1s ease forwards;
+        }
+        
+        @keyframes fadeInDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .section-title::after {
@@ -255,6 +303,12 @@
             left: 50%;
             transform: translateX(-50%);
             border-radius: 2px;
+            animation: widthGrow 1s ease 0.5s forwards;
+        }
+        
+        @keyframes widthGrow {
+            from { width: 0; }
+            to { width: 100px; }
         }
         
         /* ================= Cards ================= */
@@ -271,12 +325,13 @@
             padding: 2rem;
             position: relative;
             overflow: hidden;
-            transition: all 0.4s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(5, 217, 232, 0.1);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: column;
             height: 100%;
+            backdrop-filter: blur(5px);
         }
         
         .card::before {
@@ -287,11 +342,20 @@
             width: 100%;
             height: 5px;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+        
+        .card:hover::before {
+            transform: scaleX(1);
         }
         
         .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(5, 217, 232, 0.2);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 25px rgba(5, 217, 232, 0.25);
             border-color: var(--secondary);
         }
         
@@ -302,6 +366,11 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover i {
+            transform: scale(1.1) rotate(5deg);
         }
         
         .card h3 {
@@ -328,38 +397,103 @@
             gap: 0.7rem;
             margin-bottom: 0.8rem;
             color: rgba(209, 247, 255, 0.9);
+            transition: transform 0.2s ease;
+        }
+        
+        .card:hover ul li {
+            transform: translateX(5px);
         }
         
         .card ul li i {
             font-size: 1rem;
             margin: 0;
             color: var(--secondary);
+            transition: color 0.3s ease;
         }
         
-        /* Server Status */
-        .server.active {
-            border: 1px solid rgba(0, 255, 153, 0.5);
-            box-shadow: 0 0 15px rgba(0, 255, 153, 0.2);
+        .card:hover ul li i {
+            color: var(--primary);
         }
         
-        .server.down {
-            border: 1px solid rgba(255, 0, 0, 0.5);
-            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
-            opacity: 0.8;
+        /* Server Status Styles */
+        .server-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
         }
         
-        .server.active .status {
-            color: #00ff99;
+        .server-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .server.down .status {
-            color: #ff4d4d;
+        .server-badge.fastest {
+            background: linear-gradient(90deg, var(--success), var(--secondary));
+            color: var(--darker);
+        }
+        
+        .server-badge.stable {
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            color: var(--darker);
+        }
+        
+        .status-icon {
+            font-size: 0.8rem;
+        }
+        
+        .status-icon.online {
+            color: var(--success);
+            animation: pulseOnline 2s infinite;
+        }
+        
+        @keyframes pulseOnline {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
         
         .ping-value {
             font-family: 'Orbitron', sans-serif;
             font-weight: 700;
             color: var(--secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .ping-value.best {
+            color: var(--success);
+            text-shadow: 0 0 10px var(--success);
+        }
+        
+        .unit {
+            font-size: 0.9rem;
+            margin-left: 2px;
+            opacity: 0.8;
+        }
+        
+        .server.active {
+            border: 1px solid rgba(0, 255, 153, 0.3);
+            box-shadow: 
+                0 0 20px rgba(0, 255, 153, 0.15),
+                inset 0 0 20px rgba(0, 255, 153, 0.05);
+        }
+        
+        .server.down {
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.15);
+            opacity: 0.9;
+        }
+        
+        .server.active .status {
+            color: var(--success);
+        }
+        
+        .server.down .status {
+            color: var(--error);
         }
         
         /* Plan Cards */
@@ -372,14 +506,15 @@
             position: absolute;
             top: 20px;
             right: -30px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: var(--darker);
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             font-weight: 700;
             padding: 0.3rem 2rem;
             transform: rotate(45deg);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1;
         }
         
         .plan:nth-child(4)::after {
@@ -396,8 +531,10 @@
             margin-top: 3rem;
             padding: 1.5rem;
             background: rgba(10, 14, 23, 0.8);
-            border-radius: 10px;
+            border-radius: 15px;
             border: 1px solid rgba(5, 217, 232, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
         }
         
         .payments p {
@@ -419,12 +556,113 @@
         .payment-icons i {
             font-size: 2.2rem;
             color: rgba(209, 247, 255, 0.8);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: inline-block;
         }
         
         .payment-icons i:hover {
             color: var(--secondary);
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.1);
+            filter: drop-shadow(0 5px 10px rgba(5, 217, 232, 0.3));
+        }
+        
+        .payment-icons i::after {
+            content: attr(title);
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            background: var(--dark);
+            color: var(--secondary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+            font-family: 'Exo 2', sans-serif;
+            border: 1px solid rgba(5, 217, 232, 0.3);
+        }
+        
+        .payment-icons i:hover::after {
+            opacity: 1;
+        }
+        
+        /* ================= Glitch Effects ================= */
+        .glitch-text {
+            position: relative;
+            display: inline-block;
+            will-change: transform;
+        }
+        
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--darker);
+            overflow: hidden;
+            opacity: 0;
+        }
+        
+        .glitch-text:hover::before {
+            animation: glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3;
+            opacity: 0.8;
+        }
+        
+        .glitch-text:hover::after {
+            animation: glitch-anim2 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3;
+            opacity: 0.8;
+        }
+        
+        @keyframes glitch-anim {
+            0% { 
+                clip: rect(12px, 9999px, 18px, 0);
+                transform: translate(-2px, 0);
+            }
+            25% { 
+                clip: rect(55px, 9999px, 78px, 0);
+                transform: translate(2px, 0);
+            }
+            50% { 
+                clip: rect(22px, 9999px, 45px, 0);
+                transform: translate(-1px, 0);
+            }
+            75% { 
+                clip: rect(70px, 9999px, 92px, 0);
+                transform: translate(1px, 0);
+            }
+            100% { 
+                clip: rect(34px, 9999px, 60px, 0);
+                transform: translate(0, 0);
+            }
+        }
+        
+        @keyframes glitch-anim2 {
+            0% { 
+                clip: rect(60px, 9999px, 82px, 0);
+                transform: translate(2px, 0);
+            }
+            25% { 
+                clip: rect(24px, 9999px, 48px, 0);
+                transform: translate(-2px, 0);
+            }
+            50% { 
+                clip: rect(74px, 9999px, 96px, 0);
+                transform: translate(1px, 0);
+            }
+            75% { 
+                clip: rect(16px, 9999px, 36px, 0);
+                transform: translate(-1px, 0);
+            }
+            100% { 
+                clip: rect(32px, 9999px, 58px, 0);
+                transform: translate(0, 0);
+            }
         }
         
         /* ================= Footer ================= */
@@ -434,6 +672,7 @@
             text-align: center;
             border-top: 1px solid rgba(5, 217, 232, 0.2);
             position: relative;
+            backdrop-filter: blur(10px);
         }
         
         footer::before {
@@ -450,6 +689,7 @@
             color: rgba(209, 247, 255, 0.7);
             margin-bottom: 1.5rem;
             font-size: 1rem;
+            line-height: 1.6;
         }
         
         .socials {
@@ -470,19 +710,76 @@
             border: 1px solid rgba(5, 217, 232, 0.3);
             color: var(--light);
             font-size: 1.5rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .socials a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            z-index: -1;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+            border-radius: 50%;
+        }
+        
+        .socials a:hover::before {
+            transform: scale(1);
         }
         
         .socials a:hover {
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: transparent;
         }
         
         .copyright {
             color: rgba(209, 247, 255, 0.5);
             font-size: 0.9rem;
             margin-top: 1.5rem;
+        }
+        
+        .copyright i {
+            margin: 0 5px;
+            animation: heartbeat 1.5s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* ================= Floating Particles ================= */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--secondary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float linear infinite;
+        }
+        
+        @keyframes float {
+            to {
+                transform: translateY(-100vh);
+            }
         }
         
         /* ================= Responsive ================= */
@@ -494,6 +791,10 @@
             header h1 {
                 font-size: 2.8rem;
             }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
         }
         
         @media (max-width: 768px) {
@@ -502,7 +803,7 @@
             }
             
             nav {
-                gap: 1.5rem;
+                gap: 1.2rem;
             }
             
             nav a {
@@ -520,11 +821,18 @@
             .header-buttons {
                 flex-direction: column;
                 align-items: center;
+                gap: 1rem;
             }
             
             .btn-social {
                 width: 250px;
                 justify-content: center;
+            }
+            
+            .plan::after {
+                font-size: 0.6rem;
+                right: -25px;
+                padding: 0.2rem 1.5rem;
             }
         }
         
@@ -533,12 +841,17 @@
                 padding: 0 1rem;
             }
             
+            header {
+                padding: 2rem 0;
+            }
+            
             header h1 {
                 font-size: 1.8rem;
             }
             
             header p {
                 font-size: 1rem;
+                padding: 0 1rem;
             }
             
             .section-title {
@@ -548,371 +861,503 @@
             .card {
                 padding: 1.5rem;
             }
+            
+            .socials {
+                gap: 1rem;
+            }
+            
+            .socials a {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
         }
         
-        /* ================= Glitch Effects ================= */
-        .glitch-text {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .glitch-text::before,
-        .glitch-text::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--darker);
-        }
-        
-        .glitch-text::before {
-            left: 2px;
-            text-shadow: -2px 0 var(--primary);
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim 5s infinite linear alternate-reverse;
-        }
-        
-        .glitch-text::after {
-            left: -2px;
-            text-shadow: -2px 0 var(--secondary);
-            clip: rect(44px, 450px, 56px, 0);
-            animation: glitch-anim2 5s infinite linear alternate-reverse;
-        }
-        
-        @keyframes glitch-anim {
-            0% { clip: rect(42px, 9999px, 44px, 0); }
-            5% { clip: rect(12px, 9999px, 59px, 0); }
-            10% { clip: rect(48px, 9999px, 29px, 0); }
-            15% { clip: rect(42px, 9999px, 73px, 0); }
-            20% { clip: rect(63px, 9999px, 27px, 0); }
-            25% { clip: rect(34px, 9999px, 55px, 0); }
-            30% { clip: rect(86px, 9999px, 73px, 0); }
-            35% { clip: rect(20px, 9999px, 20px, 0); }
-            40% { clip: rect(26px, 9999px, 60px, 0); }
-            45% { clip: rect(25px, 9999px, 66px, 0); }
-            50% { clip: rect(57px, 9999px, 98px, 0); }
-            55% { clip: rect(5px, 9999px, 46px, 0); }
-            60% { clip: rect(82px, 9999px, 31px, 0); }
-            65% { clip: rect(54px, 9999px, 27px, 0); }
-            70% { clip: rect(28px, 9999px, 99px, 0); }
-            75% { clip: rect(45px, 9999px, 69px, 0); }
-            80% { clip: rect(23px, 9999px, 85px, 0); }
-            85% { clip: rect(54px, 9999px, 84px, 0); }
-            90% { clip: rect(45px, 9999px, 47px, 0); }
-            95% { clip: rect(37px, 9999px, 20px, 0); }
-            100% { clip: rect(4px, 9999px, 91px, 0); }
-        }
-        
-        @keyframes glitch-anim2 {
-            0% { clip: rect(65px, 9999px, 100px, 0); }
-            5% { clip: rect(52px, 9999px, 74px, 0); }
-            10% { clip: rect(79px, 9999px, 85px, 0); }
-            15% { clip: rect(75px, 9999px, 5px, 0); }
-            20% { clip: rect(67px, 9999px, 61px, 0); }
-            25% { clip: rect(14px, 9999px, 79px, 0); }
-            30% { clip: rect(1px, 9999px, 66px, 0); }
-            35% { clip: rect(86px, 9999px, 30px, 0); }
-            40% { clip: rect(23px, 9999px, 98px, 0); }
-            45% { clip: rect(85px, 9999px, 72px, 0); }
-            50% { clip: rect(71px, 9999px, 75px, 0); }
-            55% { clip: rect(2px, 9999px, 48px, 0); }
-            60% { clip: rect(30px, 9999px, 16px, 0); }
-            65% { clip: rect(59px, 9999px, 50px, 0); }
-            70% { clip: rect(41px, 9999px, 62px, 0); }
-            75% { clip: rect(2px, 9999px, 82px, 0); }
-            80% { clip: rect(47px, 9999px, 73px, 0); }
-            85% { clip: rect(3px, 9999px, 27px, 0); }
-            90% { clip: rect(40px, 9999px, 86px, 0); }
-            95% { clip: rect(45px, 9999px, 72px, 0); }
-            100% { clip: rect(23px, 9999px, 49px, 0); }
+        /* Accessibility: reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 <body>
-
-<!-- Custom Cursor -->
-<div class="custom-cursor"></div>
-
-<!-- Header -->
-<header>
-    <div class="container">
-        <div class="logo-container">
-            <img src="https://image2url.com/r2/bucket1/images/1766598526307-35cbaa94-86f0-4310-8357-75c0ab9f07bd.png" alt="Glitch Node Logo" class="logo">
-        </div>
-        <h1 class="glitch-text" data-text="GLITCH NODE">GLITCH NODE</h1>
-        <p>High-performance Discord Bot & Minecraft Server Hosting with ultra-low latency and global coverage</p>
-        <nav>
-            <a href="#servers"><i class="fas fa-server"></i> Servers</a>
-            <a href="#pricing"><i class="fas fa-tags"></i> Plans</a>
-            <a href="#features"><i class="fas fa-star"></i> Features</a>
-            <a href="#footer"><i class="fas fa-envelope"></i> Contact</a>
-        </nav>
-        <div class="header-buttons">
-            <a href="https://discord.gg/FxCeR7jjxx" class="btn-social"><i class="fab fa-discord"></i> Join Discord</a>
-            <a href="https://www.instagram.com/glitchnode2025/" class="btn-social"><i class="fab fa-instagram"></i> Follow Us</a>
-            <a href="https://game.glitchmc.fun/" class="btn-social"><i class="fas fa-tachometer-alt"></i> Client Panel</a>
-        </div>
-    </div>
-</header>
-
-<!-- Servers Section -->
-<section class="servers" id="servers">
-    <div class="container">
-        <h2 class="section-title">Our Global Server Network</h2>
-        <div class="card-container">
-            <div class="card server down">
-                <i class="fas fa-server"></i>
-                <h3>Dubai Server</h3>
-                <p>Located in UAE for optimal Middle East connectivity</p>
-                <ul>
-                    <li><i class="fas fa-circle"></i><span class="status">Status: Maintenance</span></li>
-                    <li><i class="fas fa-tachometer-alt"></i>Ping: <span class="ping-value">N/A</span></li>
-                    <li><i class="fas fa-wifi"></i>Uptime: 99.2%</li>
-                    <li><i class="fas fa-users"></i>Capacity: 256 slots</li>
-                </ul>
-            </div>
-            <div class="card server active">
-                <i class="fas fa-server"></i>
-                <h3>Singapore Server</h3>
-                <p>Asia-Pacific region with lowest latency to SEA countries</p>
-                <ul>
-                    <li><i class="fas fa-circle"></i><span class="status">Status: Online</span></li>
-                    <li><i class="fas fa-tachometer-alt"></i>Ping: <span class="ping-value">45</span>ms</li>
-                    <li><i class="fas fa-wifi"></i>Uptime: 99.9%</li>
-                    <li><i class="fas fa-users"></i>Capacity: 512 slots</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Pricing Section -->
-<section class="pricing" id="pricing">
-    <div class="container">
-        <h2 class="section-title">Minecraft Hosting Plans</h2>
-        <p style="text-align:center; margin-bottom:2rem; color:rgba(209, 247, 255, 0.8); max-width:800px; margin-left:auto; margin-right:auto;">Choose from our tiered plans designed for every type of Minecraft server, from small communities to massive networks.</p>
-        <div class="card-container">
-            <div class="card plan">
-                <i class="fas fa-seedling"></i>
-                <h3>Dirt Plan</h3>
-                <ul>
-                    <li><i class="fas fa-memory"></i>4 GB DDR4 RAM</li>
-                    <li><i class="fas fa-hdd"></i>10 GB NVMe Storage</li>
-                    <li><i class="fas fa-microchip"></i>100% CPU Priority</li>
-                    <li><i class="fas fa-save"></i>1 Daily Backup</li>
-                    <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
-                    <li><i class="fas fa-money-bill"></i><strong>200 PKR / month</strong></li>
-                </ul>
-            </div>
-            <div class="card plan">
-                <i class="fas fa-gem"></i>
-                <h3>Stone Plan</h3>
-                <ul>
-                    <li><i class="fas fa-memory"></i>6 GB DDR4 RAM</li>
-                    <li><i class="fas fa-hdd"></i>15 GB NVMe Storage</li>
-                    <li><i class="fas fa-microchip"></i>120% CPU Priority</li>
-                    <li><i class="fas fa-save"></i>2 Daily Backups</li>
-                    <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
-                    <li><i class="fas fa-money-bill"></i><strong>300 PKR / month</strong></li>
-                </ul>
-            </div>
-            <div class="card plan">
-                <i class="fas fa-industry"></i>
-                <h3>Iron Plan</h3>
-                <ul>
-                    <li><i class="fas fa-memory"></i>8 GB DDR4 RAM</li>
-                    <li><i class="fas fa-hdd"></i>20 GB NVMe Storage</li>
-                    <li><i class="fas fa-microchip"></i>150% CPU Priority</li>
-                    <li><i class="fas fa-save"></i>3 Daily Backups</li>
-                    <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
-                    <li><i class="fas fa-money-bill"></i><strong>450 PKR / month</strong></li>
-                </ul>
-            </div>
-            <div class="card plan">
-                <i class="fas fa-gem"></i>
-                <h3>Diamond Plan</h3>
-                <ul>
-                    <li><i class="fas fa-memory"></i>10 GB DDR4 RAM</li>
-                    <li><i class="fas fa-hdd"></i>25 GB NVMe Storage</li>
-                    <li><i class="fas fa-microchip"></i>200% CPU Priority</li>
-                    <li><i class="fas fa-save"></i>6 Daily Backups</li>
-                    <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
-                    <li><i class="fas fa-money-bill"></i><strong>550 PKR / month</strong></li>
-                </ul>
-            </div>
-            <div class="card plan">
-                <i class="fas fa-fire"></i>
-                <h3>Netherite Plan</h3>
-                <ul>
-                    <li><i class="fas fa-memory"></i>12 GB DDR4 RAM</li>
-                    <li><i class="fas fa-hdd"></i>25 GB NVMe Storage</li>
-                    <li><i class="fas fa-microchip"></i>250% CPU Priority</li>
-                    <li><i class="fas fa-save"></i>9 Daily Backups</li>
-                    <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
-                    <li><i class="fas fa-money-bill"></i><strong>700 PKR / month</strong></li>
-                </ul>
-            </div>
-            <div class="card plan">
-                <i class="fas fa-bed"></i>
-                <h3>Bedrock Plan</h3>
-                <ul>
-                    <li><i class="fas fa-memory"></i>16 GB DDR4 RAM</li>
-                    <li><i class="fas fa-hdd"></i>30 GB NVMe Storage</li>
-                    <li><i class="fas fa-microchip"></i>300% CPU Priority</li>
-                    <li><i class="fas fa-save"></i>10 Daily Backups</li>
-                    <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
-                    <li><i class="fas fa-money-bill"></i><strong>920 PKR / month</strong></li>
-                </ul>
-            </div>
-        </div>
-        <div class="payments">
-            <p>💳 ACCEPTED PAYMENT METHODS</p>
-            <div class="payment-icons">
-                <i class="fas fa-wallet" title="EasyPaisa"></i>
-                <i class="fas fa-credit-card" title="SadaPay"></i>
-                <i class="fas fa-mobile-alt" title="JazzCash"></i>
-                <i class="fas fa-university" title="NayaPay"></i>
-                <i class="fab fa-bitcoin" title="Crypto"></i>
-                <i class="fas fa-globe" title="UPI"></i>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Features -->
-<section class="features" id="features">
-    <div class="container">
-        <h2 class="section-title">Why Choose Glitch Node?</h2>
-        <div class="card-container">
-            <div class="card feature">
-                <i class="fas fa-bolt"></i>
-                <h3>Ultra Low Latency</h3>
-                <p>Optimized global network with dedicated routes for the fastest possible connection to your players.</p>
-            </div>
-            <div class="card feature">
-                <i class="fas fa-shield-alt"></i>
-                <h3>Enterprise Security</h3>
-                <p>Advanced DDoS protection, regular security audits, and encrypted backups to keep your server safe.</p>
-            </div>
-            <div class="card feature">
-                <i class="fas fa-globe"></i>
-                <h3>Global Infrastructure</h3>
-                <p>Multiple server locations worldwide to ensure optimal ping for players in every region.</p>
-            </div>
-            <div class="card feature">
-                <i class="fas fa-headset"></i>
-                <h3>24/7 Support</h3>
-                <p>Round-the-clock technical support from our expert team via Discord, with average response time under 15 minutes.</p>
-            </div>
-            <div class="card feature">
-                <i class="fas fa-rocket"></i>
-                <h3>Instant Setup</h3>
-                <p>Your server is deployed within seconds of payment confirmation. No waiting, just playing.</p>
-            </div>
-            <div class="card feature">
-                <i class="fas fa-sliders-h"></i>
-                <h3>Full Control Panel</h3>
-                <p>Intuitive web-based control panel with one-click modpack installation, file management, and console access.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Footer -->
-<footer id="footer">
-    <div class="container">
-        <div class="socials">
-            <a href="https://discord.gg/FxCeR7jjxx"><i class="fab fa-discord"></i></a>
-            <a href="https://www.instagram.com/glitchnode2025/"><i class="fab fa-instagram"></i></a>
-            <a href="https://game.glitchmc.fun/"><i class="fas fa-tachometer-alt"></i></a>
-        </div>
-        <p>Get in touch with us for custom plans, enterprise solutions, or any questions about our services.</p>
-        <p>Support: support@glitchnode.host | Sales: sales@glitchnode.host</p>
-        <div class="copyright">
-            &copy; 2025 Glitch Node Hosting. All rights reserved. | Designed with <i class="fas fa-heart" style="color:var(--primary);"></i> for the Minecraft community
-        </div>
-    </div>
-</footer>
-
-<!-- Scripts -->
-<script>
-    // Custom cursor
-    const cursor = document.querySelector('.custom-cursor');
-    document.addEventListener('mousemove', e => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
     
-    // Hover effect for cursor
-    document.querySelectorAll('a, button, .card').forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.classList.add('hover');
-        });
-        el.addEventListener('mouseleave', () => {
-            cursor.classList.remove('hover');
-        });
-    });
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
     
-    // Animate ping values
-    const pingValues = document.querySelectorAll('.ping-value');
-    setInterval(() => {
-        pingValues.forEach(el => {
-            if (el.textContent !== 'N/A') {
-                let val = Math.floor(Math.random() * 15) + 35;
-                el.textContent = val;
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <img src="https://image2url.com/r2/bucket1/images/1766598526307-35cbaa94-86f0-4310-8357-75c0ab9f07bd.png" 
+                     alt="Glitch Node Logo" 
+                     class="logo"
+                     loading="eager">
+            </div>
+            <h1 class="glitch-text" data-text="GLITCH NODE">GLITCH NODE</h1>
+            <p>High-performance Discord Bot & Minecraft Server Hosting with ultra-low latency and global coverage</p>
+            <nav>
+                <a href="#servers"><i class="fas fa-server"></i> Servers</a>
+                <a href="#pricing"><i class="fas fa-tags"></i> Plans</a>
+                <a href="#features"><i class="fas fa-star"></i> Features</a>
+                <a href="#footer"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+            <div class="header-buttons">
+                <a href="https://discord.gg/FxCeR7jjxx" class="btn-social" target="_blank" rel="noopener">
+                    <i class="fab fa-discord"></i> Join Discord
+                </a>
+                <a href="https://www.instagram.com/glitchnode2025/" class="btn-social" target="_blank" rel="noopener">
+                    <i class="fab fa-instagram"></i> Follow Us
+                </a>
+                <a href="https://game.glitchmc.fun/" class="btn-social" target="_blank" rel="noopener">
+                    <i class="fas fa-tachometer-alt"></i> Client Panel
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Servers Section -->
+    <section class="servers" id="servers">
+        <div class="container">
+            <h2 class="section-title">🌍 Our Global Server Network</h2>
+            <div class="card-container">
+                <!-- Dubai Server -->
+                <div class="card server active" data-region="middle-east">
+                    <div class="server-header">
+                        <i class="fas fa-server"></i>
+                        <span class="server-badge fastest">Best Performance</span>
+                    </div>
+                    <h3>Dubai Server</h3>
+                    <p>Ultra-low latency server optimized for Middle East with elite performance.</p>
+                    <ul>
+                        <li>
+                            <i class="fas fa-circle status-icon online"></i>
+                            Status: <strong>Online</strong>
+                        </li>
+                        <li>
+                            <i class="fas fa-tachometer-alt"></i>
+                            Ping: <span class="ping-value best">18</span><span class="unit">ms</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-wifi"></i>
+                            Uptime: <strong>99.95%</strong>
+                        </li>
+                        <li>
+                            <i class="fas fa-users"></i>
+                            Capacity: <strong>256 Slots</strong>
+                        </li>
+                    </ul>
+                </div>
                 
-                // Add a subtle animation
+                <!-- Singapore Server -->
+                <div class="card server" data-region="asia-pacific">
+                    <div class="server-header">
+                        <i class="fas fa-server"></i>
+                        <span class="server-badge stable">High Stability</span>
+                    </div>
+                    <h3>Singapore Server</h3>
+                    <p>Highly stable Asia-Pacific server with balanced latency across SEA.</p>
+                    <ul>
+                        <li>
+                            <i class="fas fa-circle status-icon online"></i>
+                            Status: <strong>Online</strong>
+                        </li>
+                        <li>
+                            <i class="fas fa-tachometer-alt"></i>
+                            Ping: <span class="ping-value">42</span><span class="unit">ms</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-wifi"></i>
+                            Uptime: <strong>99.90%</strong>
+                        </li>
+                        <li>
+                            <i class="fas fa-users"></i>
+                            Capacity: <strong>512 Slots</strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <h2 class="section-title">Minecraft Hosting Plans</h2>
+            <p style="text-align:center; margin-bottom:2rem; color:rgba(209, 247, 255, 0.8); max-width:800px; margin-left:auto; margin-right:auto;">
+                Choose from our tiered plans designed for every type of Minecraft server, from small communities to massive networks.
+            </p>
+            <div class="card-container">
+                <div class="card plan">
+                    <i class="fas fa-seedling"></i>
+                    <h3>Dirt Plan</h3>
+                    <ul>
+                        <li><i class="fas fa-memory"></i>4 GB DDR4 RAM</li>
+                        <li><i class="fas fa-hdd"></i>10 GB NVMe Storage</li>
+                        <li><i class="fas fa-microchip"></i>100% CPU Priority</li>
+                        <li><i class="fas fa-save"></i>1 Daily Backup</li>
+                        <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
+                        <li><i class="fas fa-money-bill"></i><strong>200 PKR / month</strong></li>
+                    </ul>
+                </div>
+                <div class="card plan">
+                    <i class="fas fa-gem"></i>
+                    <h3>Stone Plan</h3>
+                    <ul>
+                        <li><i class="fas fa-memory"></i>6 GB DDR4 RAM</li>
+                        <li><i class="fas fa-hdd"></i>15 GB NVMe Storage</li>
+                        <li><i class="fas fa-microchip"></i>120% CPU Priority</li>
+                        <li><i class="fas fa-save"></i>2 Daily Backups</li>
+                        <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
+                        <li><i class="fas fa-money-bill"></i><strong>300 PKR / month</strong></li>
+                    </ul>
+                </div>
+                <div class="card plan">
+                    <i class="fas fa-industry"></i>
+                    <h3>Iron Plan</h3>
+                    <ul>
+                        <li><i class="fas fa-memory"></i>8 GB DDR4 RAM</li>
+                        <li><i class="fas fa-hdd"></i>20 GB NVMe Storage</li>
+                        <li><i class="fas fa-microchip"></i>150% CPU Priority</li>
+                        <li><i class="fas fa-save"></i>3 Daily Backups</li>
+                        <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
+                        <li><i class="fas fa-money-bill"></i><strong>450 PKR / month</strong></li>
+                    </ul>
+                </div>
+                <div class="card plan">
+                    <i class="fas fa-gem"></i>
+                    <h3>Diamond Plan</h3>
+                    <ul>
+                        <li><i class="fas fa-memory"></i>10 GB DDR4 RAM</li>
+                        <li><i class="fas fa-hdd"></i>25 GB NVMe Storage</li>
+                        <li><i class="fas fa-microchip"></i>200% CPU Priority</li>
+                        <li><i class="fas fa-save"></i>6 Daily Backups</li>
+                        <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
+                        <li><i class="fas fa-money-bill"></i><strong>550 PKR / month</strong></li>
+                    </ul>
+                </div>
+                <div class="card plan">
+                    <i class="fas fa-fire"></i>
+                    <h3>Netherite Plan</h3>
+                    <ul>
+                        <li><i class="fas fa-memory"></i>12 GB DDR4 RAM</li>
+                        <li><i class="fas fa-hdd"></i>25 GB NVMe Storage</li>
+                        <li><i class="fas fa-microchip"></i>250% CPU Priority</li>
+                        <li><i class="fas fa-save"></i>9 Daily Backups</li>
+                        <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
+                        <li><i class="fas fa-money-bill"></i><strong>700 PKR / month</strong></li>
+                    </ul>
+                </div>
+                <div class="card plan">
+                    <i class="fas fa-bed"></i>
+                    <h3>Bedrock Plan</h3>
+                    <ul>
+                        <li><i class="fas fa-memory"></i>16 GB DDR4 RAM</li>
+                        <li><i class="fas fa-hdd"></i>30 GB NVMe Storage</li>
+                        <li><i class="fas fa-microchip"></i>300% CPU Priority</li>
+                        <li><i class="fas fa-save"></i>10 Daily Backups</li>
+                        <li><i class="fas fa-bolt"></i>Unlimited Bandwidth</li>
+                        <li><i class="fas fa-money-bill"></i><strong>920 PKR / month</strong></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="payments">
+                <p>💳 ACCEPTED PAYMENT METHODS</p>
+                <div class="payment-icons">
+                    <i class="fas fa-wallet" title="EasyPaisa"></i>
+                    <i class="fas fa-credit-card" title="SadaPay"></i>
+                    <i class="fas fa-mobile-alt" title="JazzCash"></i>
+                    <i class="fas fa-university" title="NayaPay"></i>
+                    <i class="fab fa-bitcoin" title="Crypto"></i>
+                    <i class="fas fa-globe" title="UPI"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Glitch Node?</h2>
+            <div class="card-container">
+                <div class="card feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Ultra Low Latency</h3>
+                    <p>Optimized global network with dedicated routes for the fastest possible connection to your players.</p>
+                </div>
+                <div class="card feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Enterprise Security</h3>
+                    <p>Advanced DDoS protection, regular security audits, and encrypted backups to keep your server safe.</p>
+                </div>
+                <div class="card feature">
+                    <i class="fas fa-globe"></i>
+                    <h3>Global Infrastructure</h3>
+                    <p>Multiple server locations worldwide to ensure optimal ping for players in every region.</p>
+                </div>
+                <div class="card feature">
+                    <i class="fas fa-headset"></i>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock technical support from our expert team via Discord, with average response time under 15 minutes.</p>
+                </div>
+                <div class="card feature">
+                    <i class="fas fa-rocket"></i>
+                    <h3>Instant Setup</h3>
+                    <p>Your server is deployed within seconds of payment confirmation. No waiting, just playing.</p>
+                </div>
+                <div class="card feature">
+                    <i class="fas fa-sliders-h"></i>
+                    <h3>Full Control Panel</h3>
+                    <p>Intuitive web-based control panel with one-click modpack installation, file management, and console access.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer id="footer">
+        <div class="container">
+            <div class="socials">
+                <a href="https://discord.gg/FxCeR7jjxx" target="_blank" rel="noopener">
+                    <i class="fab fa-discord"></i>
+                </a>
+                <a href="https://www.instagram.com/glitchnode2025/" target="_blank" rel="noopener">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://game.glitchmc.fun/" target="_blank" rel="noopener">
+                    <i class="fas fa-tachometer-alt"></i>
+                </a>
+            </div>
+            <p>Get in touch with us for custom plans, enterprise solutions, or any questions about our services.</p>
+            <p>Support: support@glitchnode.host | Sales: sales@glitchnode.host</p>
+            <div class="copyright">
+                &copy; 2025 Glitch Node Hosting. All rights reserved. | Designed with <i class="fas fa-heart"></i> for the Minecraft community
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    <script>
+        // Optimized performance: Debounce and throttle functions
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
+        function throttle(func, limit) {
+            let inThrottle;
+            return function() {
+                const args = arguments;
+                const context = this;
+                if (!inThrottle) {
+                    func.apply(context, args);
+                    inThrottle = true;
+                    setTimeout(() => inThrottle = false, limit);
+                }
+            }
+        }
+        
+        // Custom cursor with performance optimization
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+        
+        // Smooth cursor movement using RAF
+        function updateCursor() {
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+            
+            cursorX += dx * 0.15;
+            cursorY += dy * 0.15;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            
+            requestAnimationFrame(updateCursor);
+        }
+        
+        updateCursor();
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        // Hover effect for cursor
+        document.querySelectorAll('a, button, .card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hover');
+            });
+        });
+        
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 3 + 1;
+                const posX = Math.random() * 100;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                const opacity = Math.random() * 0.5 + 0.1;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}vw`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.opacity = opacity;
+                particle.style.background = i % 2 === 0 ? 'var(--secondary)' : 'var(--primary)';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Animate ping values with realistic simulation
+        const pingValues = document.querySelectorAll('.ping-value');
+        let dubaiBase = 18;
+        let singaporeBase = 42;
+        
+        function updatePingValues() {
+            pingValues.forEach(el => {
+                const card = el.closest('.server');
+                const region = card?.dataset.region;
+                
+                if (region === 'middle-east') {
+                    const variation = Math.random() * 4 - 2; // -2 to +2
+                    const newPing = Math.max(15, Math.min(22, dubaiBase + variation));
+                    el.textContent = Math.round(newPing);
+                    el.style.color = newPing < 20 ? 'var(--success)' : 'var(--secondary)';
+                } else if (region === 'asia-pacific') {
+                    const variation = Math.random() * 6 - 3; // -3 to +3
+                    const newPing = Math.max(38, Math.min(48, singaporeBase + variation));
+                    el.textContent = Math.round(newPing);
+                    el.style.color = 'var(--secondary)';
+                }
+                
+                // Subtle animation
                 el.style.transform = 'scale(1.2)';
                 setTimeout(() => {
                     el.style.transform = 'scale(1)';
-                }, 200);
-            }
+                }, 150);
+            });
+        }
+        
+        // Scroll animations with Intersection Observer
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    sectionObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         });
-    }, 3000);
-    
-    // Add scroll animation for cards
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
+        
+        document.querySelectorAll('section').forEach(section => {
+            sectionObserver.observe(section);
         });
-    }, observerOptions);
-    
-    // Observe all cards
-    document.querySelectorAll('.card').forEach(card => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(card);
-    });
-    
-    // Smooth scrolling for navigation links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
+        
+        // Card animation observer
+        const cardObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, index * 100);
+                    cardObserver.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+        
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    const headerOffset = 80;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
             
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
+            // Set initial ping values
+            updatePingValues();
             
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80,
-                    behavior: 'smooth'
-                });
+            // Update ping values every 3 seconds
+            setInterval(updatePingValues, 3000);
+            
+            // Observe all cards
+            document.querySelectorAll('.card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                cardObserver.observe(card);
+            });
+            
+            // Make header visible immediately
+            document.querySelector('header').style.opacity = '1';
+        });
+        
+        // Handle window resize efficiently
+        window.addEventListener('resize', debounce(() => {
+            // Recalculate anything that depends on viewport
+            document.querySelectorAll('.card').forEach(card => {
+                cardObserver.observe(card);
+            });
+        }, 250));
+        
+        // Handle visibility change for performance
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Page is hidden, reduce animations
+            } else {
+                // Page is visible, resume animations
             }
         });
-    });
-</script>
-
+    </script>
 </body>
 </html>
